@@ -49,34 +49,6 @@ void solution(vector<int> &sol, int V, int F, int P) {
   }
 }
 
-// int iterDP(int V, int F, int P, int N) {
-//   // Init of DP
-//   vector<vector<int>> DP;
-//   DP.resize(V + 1);
-//   for (int i = 0; i <= V; i++) {
-//     DP[i].resize(V + F + 1);
-//   }
-//   // buffer line for i = 0
-//   for (int j = 0; j <= V + F; j++) {
-//     DP[0][j] = 0;
-//   }
-//   // buffer line for j = 0
-//   for (int i = 0; i <= V; i++) {
-//     DP[i][0] = 0;
-//   }
-
-//   // DP construction
-//   int i, j;
-//   for (i = 1; i <= V && P >= 0; i++) {
-//     DP[i][0] = DP[i - 1][1];
-//     for (j = 1; j <= V + F && P > 0; j++) {
-//       DP[i][j] = DP[i - 1][j + 1] + DP[i][j - 1] + N;
-//       P--;
-//     }
-//   }
-//   return DP[i - 1][j - 1];
-// }
-
 int main() {
 
   ifstream in("input.txt");
