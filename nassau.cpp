@@ -3,69 +3,41 @@ using namespace std;
 #include <iomanip>
 #include <iostream>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
-int memoDP(unordered_map<string, pair<int, int>> &DP, int v, int f, int P,
-           int N);
-int calcDP(unordered_map<string, pair<int, int>> &DP, int v, int f, int P,
-           int N);
-void solution(vector<int> &sol, int V, int F, int P);
-
-string intToKey(int a, int b) { return to_string(a) + to_string(b); }
-
-int memoDP(unordered_map<string, pair<int, int>> &DP, int v, int f, int P,
-           int N) {
-  string key = intToKey(v, f);
-  if (!DP.count(key)) {
-    DP[key].first = calcDP(DP, v, f, P, N);
-    DP[key].second = 1;
-  } else {
-    DP[key].second += 1;
-  }
-  return DP[key].first;
-}
-
-int calcDP(unordered_map<string, pair<int, int>> &DP, int v, int f, int P,
-           int N) {
-  if (P == 0) {
+int alternative(int v, int f, int mv, int c) {
+  if (c <= 0) {
     return 0;
-  } else if (!(v > 0 && f > 0)) {
+  } else if (v <= 0 && mv <= 0 && f <= 0) {
     return 0;
   } else {
-    return memoDP(DP, v - 1, f + 1, P - 1, N) + memoDP(DP, v, f - 1, P - 1, N) +
-           N;
-  }
-}
-
-void solution(vector<int> &sol, int V, int F, int P) {
-  int N = V + F;
-  unordered_map<string, pair<int, int>> DP;
-  int result = memoDP(DP, 2 * V, F, P, N);
-
-  for (pair<string, pair<int, int>> element : DP) {
-    cout << "Key: " << element.first << endl;
-    cout << "Second: " << element.second.second << endl << endl;
+    int res = v + mv + f;
+    if (v > 0) {
+      res += alternative(v - 1, f, mv + 1, c - 1);
+    }
+    if (f > 0) {
+      res += alternative(v, f - 1, mv, c - 1);
+    }
+    if (mv > 0) {
+      res += alternative(v, f, mv - 1, c - 1);
+    }
+    return res;
   }
 }
 
 int main() {
 
   ifstream in("input.txt");
+  // string id;
+  // cin >> id;
+  // ifstream in("dataset/input/input" + id + ".txt");
 
-  int V, F, P;
-  in >> V >> F >> P;
-  int N = V + F;
+  int V, F, MV = 0, C;
+  in >> V >> F >> C;
 
-  // cout << pureDP(2 * V, F, P, N) << endl;
-  // cout << iterDP(2 * V, F, P, N) << endl;
+  int res = alternative(V, F, MV, C);
 
-  vector<int> sol;
-  solution(sol, V, F, P);
-
-  // double result;
-  // ofstream out("output.txt");
-  // out << scientific << setprecision(10) << result << endl;
+  cout << res << endl;
 
   return 0;
 }
