@@ -12,9 +12,9 @@ double potenzaPonderata(unordered_map<string, double> &DP, int v, int f, int mV,
 double potenzaMemo(unordered_map<string, double> &DP, int v, int f, int mV,
                    int colpi, double prob);
 
-string intToKey(int a, int b, int c, double d, int e) {
+string intToKey(int a, int b, int c, double d) {
   return to_string(a) + " " + to_string(b) + " " + to_string(c) + " " +
-         to_string(d) + " " + to_string(e);
+         to_string(d);
 }
 
 double potenzaPonderata(unordered_map<string, double> &DP, int v, int f, int mV,
@@ -41,7 +41,7 @@ double potenzaPonderata(unordered_map<string, double> &DP, int v, int f, int mV,
 
 double potenzaMemo(unordered_map<string, double> &DP, int v, int f, int mV,
                    int colpi, double prob) {
-  string key = intToKey(v, f, mV, prob, colpi);
+  string key = intToKey(v, f, mV, prob);
   if (DP.count(key) == 0) {
     DP[key] = potenzaPonderata(DP, v, f, mV, colpi, prob);
   }
