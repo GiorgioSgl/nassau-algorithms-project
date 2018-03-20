@@ -13,7 +13,27 @@ double potenzaMemo(unordered_map<string, double> &DP, int v, int f, int mV,
                    int colpi, double prob);
 
 string intToKey(int a, int b, int c) {
-  return to_string(a) + to_string(b) + to_string(c);
+  return to_string(a) + " " + to_string(b) + " " + to_string(c);
+}
+
+double potenzaVecchia(int v, int f, int mV, int colpi, double prob) {
+
+  if (colpi == 0) {
+    return prob * (f * (mV + v));
+  } else {
+    double uno = 0, due = 0, tre = 0;
+    if (v != 0)
+      uno = potenzaVecchia(v - 1, f, mV + 1, colpi - 1,
+                           prob * ((double)v / (v + f + mV)));
+    if (f != 0)
+      due = potenzaVecchia(v, f - 1, mV, colpi - 1,
+                           prob * ((double)f / (v + f + mV)));
+    if (mV != 0)
+      tre = potenzaVecchia(v, f, mV - 1, colpi - 1,
+                           prob * ((double)mV / (v + f + mV)));
+
+    return uno + due + tre;
+  }
 }
 
 double potenzaPonderata(unordered_map<string, double> &DP, int v, int f, int mV,
@@ -55,6 +75,10 @@ int main() {
   // cout << ((double)v/(f+v));
   unordered_map<string, double> DP;
   double res = potenzaPonderata(DP, v, f, 0, c, 1);
+
+  for (pair<string, double> element : DP) {
+    cout << element.first << " => " << element.second << endl;
+  }
 
   ofstream out("output.txt");
   out << scientific << setprecision(10) << res << endl;
