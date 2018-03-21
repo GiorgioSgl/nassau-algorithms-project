@@ -46,7 +46,8 @@ double potenzaMemo(unordered_map<string, double> &DP, int v, int f, int mV,
 }
 
 double iterPotenza(int v, int f, int mV, int colpi) {
-  vector<vector<vector<int>>> DP;
+  // DP 3d matrix init
+  vector<vector<vector<double>>> DP;
   DP.resize(v + 1);
   for (int i = 0; i <= v; i++) {
     DP[i].resize(f + 1);
@@ -54,6 +55,45 @@ double iterPotenza(int v, int f, int mV, int colpi) {
       DP[i][j].resize(v + 1);
     }
   }
+
+  // Casi base: (v==0 and mV==0) e (f==0)
+  for (int j = 0; j <= f; j++) {
+    DP[0][j][0] = 0;
+  }
+  for (int i = 0; i <= v; i++) {
+    for (int k = 0; k <= v; k++) {
+      DP[i][0][k] = 0;
+    }
+  }
+
+  // Quali sono i casi partenza?
+  int vstart = v - colpi > 0 ? v - colpi : 0;
+  int fstart = f - colpi > 0 ? f - colpi : 0;
+
+  // Casi partenza
+  for (int i = vstart; i <= v; i++) {
+    for (int k = 0; k <= v; k++) {
+      DP[i][fstart][k] = fstart * (i + k);
+    }
+  }
+  for (int j = fstart; j <= f; j++) {
+    for (int k = 0; k <= v; k++) {
+      DP[vstart][j][k] = j * (vstart + k);
+    }
+  }
+
+  for (int i = vstart + 1; i <= v; i++) {
+    for (int j = fstart + 1; j <= f; j++) {
+      for (int k = 1; k <= v; k++) {
+        double tmp = (i * DP[i - 1][j][k + 1] + f * DP[i][j - 1][k] +
+                      k * DP[i][j][k - 1]) /
+                     ((double)i + j + k);
+        DP[i][j][k];
+      }
+    }
+  }
+
+  cout << DP[v][f][mV] << endl;
 }
 
 int main() {
@@ -66,11 +106,13 @@ int main() {
   int v, f, c;
   in >> v >> f >> c;
 
-  unordered_map<string, double> DP;
-  double res = c >= (2 * v + f) ? 0 : potenzaPonderata(DP, v, f, 0, c);
+  iterPotenza(v, f, 0, c);
 
-  ofstream out("output.txt");
-  out << scientific << setprecision(10) << res << endl;
+  // unordered_map<string, double> DP;
+  // double res = c >= (2 * v + f) ? 0 : potenzaPonderata(DP, v, f, 0, c);
+
+  // ofstream out("output.txt");
+  // out << scientific << setprecision(10) << res << endl;
 
   return 0;
 }
