@@ -6,6 +6,7 @@ using namespace std;
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 double potenzaPonderata(unordered_map<string, double> &DP, int v, int f, int mV,
                         int colpi);
@@ -42,6 +43,17 @@ double potenzaMemo(unordered_map<string, double> &DP, int v, int f, int mV,
     DP[key] = potenzaPonderata(DP, v, f, mV, colpi);
   }
   return DP[key];
+}
+
+double iterPotenza(int v, int f, int mV, int colpi) {
+  vector<vector<vector<int>>> DP;
+  DP.resize(v + 1);
+  for (int i = 0; i <= v; i++) {
+    DP[i].resize(f + 1);
+    for (int j = 0; j <= f; j++) {
+      DP[i][j].resize(v + 1);
+    }
+  }
 }
 
 int main() {
