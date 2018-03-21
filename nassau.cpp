@@ -21,6 +21,14 @@ double iterPotenza(int V, int F, int mV, int colpi) {
   // }
   double DP[dim][dim][V + 1];
 
+  // for (int i = 0; i < dim; i++) {
+  //   for (int j = 0; j < dim; j++) {
+  //     for (int k = 0; k <= V; k++) {
+  //       DP[i][j][k] = 0.0;
+  //     }
+  //   }
+  // }
+
   int currentI, previousI;
   int currentJ, previousJ;
 
@@ -34,7 +42,7 @@ double iterPotenza(int V, int F, int mV, int colpi) {
         // Se colpi andati, restituisci potenza!
         int colpiSparati = 2 * (V - i) - k + F - j;
         if (colpiSparati > colpi) {
-          DP[currentI][currentJ][k] = 0;
+          DP[currentI][currentJ][k] = 0.0;
         } else if (colpiSparati == colpi) {
           double tmp = (i + k) * j;
           DP[currentI][currentJ][k] = tmp;
