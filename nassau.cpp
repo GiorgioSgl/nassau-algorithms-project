@@ -117,10 +117,10 @@ double iterPotenza(int V, int F, int mV, int colpi) {
 
 int main() {
 
-  // ifstream in("input.txt");
-  string id;
-  cin >> id;
-  ifstream in("dataset/input/input" + id + ".txt");
+  ifstream in("input.txt");
+  // string id;
+  // cin >> id;
+  // ifstream in("dataset/input/input" + id + ".txt");
 
   int v, f, c;
   in >> v >> f >> c;
