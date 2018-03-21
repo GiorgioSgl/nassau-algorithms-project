@@ -7,17 +7,17 @@ using namespace std;
 
 int finals(int v, int f, int mv, int c) {
   if (c <= 0) {
-    return 1;
+    return (v + mv) * f;
   } else {
     int res = 0;
     if (v > 0) {
-      res += finals(v - 1, f, mv + 1, c - 1) * v;
+      res += finals(v - 1, f, mv + 1, c - 1);
     }
     if (f > 0) {
-      res += finals(v, f - 1, mv, c - 1) * f;
+      res += finals(v, f - 1, mv, c - 1);
     }
     if (mv > 0) {
-      res += finals(v, f, mv - 1, c - 1) * mv;
+      res += finals(v, f, mv - 1, c - 1);
     }
     return res;
   }
