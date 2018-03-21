@@ -25,16 +25,13 @@ double potenzaPonderata(unordered_map<string, double> &DP, int v, int f, int mV,
   } else {
     double uno = 0, due = 0, tre = 0;
     if (v != 0)
-      uno = ((double)v / (v + f + mV)) *
-            potenzaMemo(DP, v - 1, f, mV + 1, colpi - 1);
+      uno = ((double)v) * potenzaMemo(DP, v - 1, f, mV + 1, colpi - 1);
     if (f != 0)
-      due =
-          ((double)f / (v + f + mV)) * potenzaMemo(DP, v, f - 1, mV, colpi - 1);
+      due = ((double)f) * potenzaMemo(DP, v, f - 1, mV, colpi - 1);
     if (mV != 0)
-      tre = ((double)mV / (v + f + mV)) *
-            potenzaMemo(DP, v, f, mV - 1, colpi - 1);
+      tre = ((double)mV) * potenzaMemo(DP, v, f, mV - 1, colpi - 1);
 
-    return uno + due + tre;
+    return (uno + due + tre) / (v + f + mV);
   }
 }
 
