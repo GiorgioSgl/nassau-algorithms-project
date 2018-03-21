@@ -42,77 +42,94 @@ double potenzaMemo(unordered_map<string, double> &DP, int v, int f, int mV,
   if (DP.count(key) == 0) {
     DP[key] = potenzaPonderata(DP, v, f, mV, colpi);
   }
+  cout << "DP(" << v << ", " << f << ", " << mV << ") = " << DP[key] << endl;
   return DP[key];
 }
 
-double iterPotenza(int v, int f, int mV, int colpi) {
+double iterPotenza(int V, int F, int mV, int colpi) {
   // DP 3d matrix init
-  vector<vector<vector<double>>> DP;
-  DP.resize(v + 1);
-  for (int i = 0; i <= v; i++) {
-    DP[i].resize(f + 1);
-    for (int j = 0; j <= f; j++) {
-      DP[i][j].resize(v + 1);
-    }
-  }
+  // vector<vector<vector<double>>> DP;
+  // DP.resize(V + 1);
+  // for (int i = 0; i <= V; i++) {
+  //   DP[i].resize(F + 1);
+  //   for (int j = 0; j <= F; j++) {
+  //     DP[i][j].resize(V + 1);
+  //   }
+  // }
+  double DP[V + 1][F + 1][V + 1];
 
-  // Casi base: (v==0 and mV==0) e (f==0)
-  for (int j = 0; j <= f; j++) {
-    DP[0][j][0] = 0;
-  }
-  for (int i = 0; i <= v; i++) {
-    for (int k = 0; k <= v; k++) {
-      DP[i][0][k] = 0;
-    }
-  }
-
-  // Quali sono i casi partenza?
-  int vstart = v - colpi > 0 ? v - colpi : 0;
-  int fstart = f - colpi > 0 ? f - colpi : 0;
-
-  // Casi partenza
-  for (int i = vstart; i <= v; i++) {
-    for (int k = 0; k <= v; k++) {
-      DP[i][fstart][k] = fstart * (i + k);
-    }
-  }
-  for (int j = fstart; j <= f; j++) {
-    for (int k = 0; k <= v; k++) {
-      DP[vstart][j][k] = j * (vstart + k);
-    }
-  }
-
-  for (int i = vstart + 1; i <= v; i++) {
-    for (int j = fstart + 1; j <= f; j++) {
-      for (int k = 1; k <= v; k++) {
-        double tmp = (i * DP[i - 1][j][k + 1] + f * DP[i][j - 1][k] +
-                      k * DP[i][j][k - 1]) /
-                     ((double)i + j + k);
-        DP[i][j][k];
+  // Casi base: (V==0 and mV==0) e (F==0)
+  for (int i = 0; i <= 1; i++) {
+    for (int j = 0; j <= 1; j++) {
+      for (int k = 0; k <= 1; k++) {
+        DP[i][j][k] = (i + k) * j;
       }
     }
   }
 
-  cout << DP[v][f][mV] << endl;
+  for (int i = 0; i <= V; i++) {
+    for (int j = 0; j <= F; j++) {
+      for (int k = 0; k <= V; k++) {
+        // Se colpi andati, restituisci potenza!
+        int colpiSparati = 2 * (V - i) - k + F - j;
+        if (colpiSparati > colpi) {
+          DP[i][j][k] = 0;
+        } else if (colpiSparati == colpi) {
+          double tmp = (i + k) * j;
+          DP[i][j][k] = tmp;
+        } else {
+          double uno, due, tre;
+          if (i > 0 && k < V) {
+            uno = ((double)i) * DP[i - 1][j][k + 1];
+          } else {
+            uno = 0;
+          }
+          if (j > 0) {
+            due = ((double)j) * DP[i][j - 1][k];
+          } else {
+            due = 0;
+          }
+          if (k > 0) {
+            tre = ((double)k) * DP[i][j][k - 1];
+          } else {
+            tre = 0;
+          }
+
+          double res = ((double)uno + due + tre) / ((double)i + j + k);
+
+          DP[i][j][k] = res;
+        }
+      }
+    }
+  }
+
+  // for (int i = 0; i <= V; i++) {
+  //   for (int j = 0; j <= F; j++) {
+  //     for (int k = 0; k <= V; k++) {
+  //       cout << "DP[" << i << "][" << j << "][" << k << "] = " << DP[i][j][k]
+  //            << endl;
+  //     }
+  //   }
+  // }
+
+  return DP[V][F][mV];
 }
 
 int main() {
 
-  ifstream in("input.txt");
-  // string id;
-  // cin >> id;
-  // ifstream in("dataset/input/input" + id + ".txt");
+  // ifstream in("input.txt");
+  string id;
+  cin >> id;
+  ifstream in("dataset/input/input" + id + ".txt");
 
   int v, f, c;
   in >> v >> f >> c;
 
-  iterPotenza(v, f, 0, c);
-
   // unordered_map<string, double> DP;
-  // double res = c >= (2 * v + f) ? 0 : potenzaPonderata(DP, v, f, 0, c);
+  double res = c >= (2 * v + f) ? 0 : iterPotenza(v, f, 0, c);
 
-  // ofstream out("output.txt");
-  // out << scientific << setprecision(10) << res << endl;
+  ofstream out("output.txt");
+  out << scientific << setprecision(10) << res << endl;
 
   return 0;
 }
