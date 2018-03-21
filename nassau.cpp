@@ -11,18 +11,18 @@ using namespace std;
 double iterPotenza(int V, int F, int mV, int colpi) {
   // // DP 3d matrix init
   int dim = 2;
-  // vector<vector<vector<double>>> DP;
-  // DP.resize(dim);
-  // for (int i = 0; i < dim; i++) {
-  //   DP[i].resize(dim);
-  //   for (int j = 0; j < dim; j++) {
-  //     DP[i][j].resize(V + 1);
-  //   }
-  // }
-  double DP[dim][dim][V + 1];
+  vector<vector<vector<double>>> DP;
+  DP.resize(dim);
+  for (int i = 0; i < dim; i++) {
+    DP[i].resize(F + 1);
+    for (int j = 0; j <= F; j++) {
+      DP[i][j].resize(V + 1);
+    }
+  }
+  // double DP[dim][F + 1][V + 1];
 
   // for (int i = 0; i < dim; i++) {
-  //   for (int j = 0; j < dim; j++) {
+  //   for (int j = 0; j <= F; j++) {
   //     for (int k = 0; k <= V; k++) {
   //       DP[i][j][k] = 0.0;
   //     }
@@ -36,37 +36,37 @@ double iterPotenza(int V, int F, int mV, int colpi) {
     currentI = i % 2;
     previousI = (i - 1) % 2;
     for (int j = 0; j <= F; j++) {
-      currentJ = j % 2;
-      previousJ = (j - 1) % 2;
+      // currentJ = j % 2;
+      // previousJ = (j - 1) % 2;
       for (int k = 0; k <= V; k++) {
         // Se colpi andati, restituisci potenza!
         int colpiSparati = 2 * (V - i) - k + F - j;
         if (colpiSparati > colpi) {
-          DP[currentI][currentJ][k] = 0.0;
+          DP[currentI][j][k] = 0.0;
         } else if (colpiSparati == colpi) {
           double tmp = (i + k) * j;
-          DP[currentI][currentJ][k] = tmp;
+          DP[currentI][j][k] = tmp;
         } else {
           double uno, due, tre;
           if (i > 0 && k < V) {
-            uno = ((double)i) * DP[previousI][currentJ][k + 1];
+            uno = ((double)i) * DP[previousI][j][k + 1];
           } else {
             uno = 0;
           }
           if (j > 0) {
-            due = ((double)j) * DP[currentI][previousJ][k];
+            due = ((double)j) * DP[currentI][j - 1][k];
           } else {
             due = 0;
           }
           if (k > 0) {
-            tre = ((double)k) * DP[currentI][currentJ][k - 1];
+            tre = ((double)k) * DP[currentI][j][k - 1];
           } else {
             tre = 0;
           }
 
           double res = ((double)uno + due + tre) / ((double)i + j + k);
 
-          DP[currentI][currentJ][k] = res;
+          DP[currentI][j][k] = res;
         }
       }
     }
@@ -81,15 +81,15 @@ double iterPotenza(int V, int F, int mV, int colpi) {
   //   }
   // }
 
-  return DP[currentI][currentJ][mV];
+  return DP[currentI][F][mV];
 }
 
 int main() {
 
-  // ifstream in("input.txt");
-  string id;
-  cin >> id;
-  ifstream in("dataset/input/input" + id + ".txt");
+  ifstream in("input.txt");
+  // string id;
+  // cin >> id;
+  // ifstream in("dataset/input/input" + id + ".txt");
 
   int v, f, c;
   in >> v >> f >> c;
