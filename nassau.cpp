@@ -65,8 +65,6 @@ double iterPotenza(int V, int F, int mV, int colpi) {
           }
 
           double res = ((double)uno + due + tre) / ((double)i + j + k);
-          cout << "DP[" << i << "][" << j << "][" << k
-               << "] = " << DP[currentI][currentJ][k] << endl;
           DP[currentI][currentJ][k] = res;
         }
       }
