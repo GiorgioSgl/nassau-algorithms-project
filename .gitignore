@@ -4,10 +4,6 @@ nassau
 input.txt
 output.txt
 dataset
-<<<<<<< HEAD
 giorgio*
 mattia*
-=======
-mattia*
-giorgio*
->>>>>>> test
+ref
