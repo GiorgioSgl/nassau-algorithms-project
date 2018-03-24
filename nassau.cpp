@@ -8,79 +8,34 @@ using namespace std;
 #include <unordered_map>
 #include <vector>
 
-double iterPotenza(int V, int F, int mV, int colpi) {
-  int dim = 2;
-  // // DP 3d matrix init
-  // vector<vector<vector<double>>> DP;
-  // DP.resize(dim);
-  // for (int i = 0; i < dim; i++) {
-  //   DP[i].resize(F + 1);
-  //   for (int j = 0; j <= F; j++) {
-  //     DP[i][j].resize(V + 1);
-  //   }
-  // }
-  double DP[dim][dim][V + 1];
-
-  // for (int i = 0; i < dim; i++) {
-  //   for (int j = 0; j <= F; j++) {
-  //     for (int k = 0; k <= V; k++) {
-  //       DP[i][j][k] = 0.0;
-  //     }
-  //   }
-  // }
-
-  int currentI, previousI;
-  int currentJ, previousJ;
-
-  for (int i = 0; i <= V; i++) {
-    currentI = i % 2;
-    previousI = (i - 1) % 2;
-    for (int j = 0; j <= F; j++) {
-      currentJ = j % 2;
-      previousJ = (j - 1) % 2;
-      for (int k = 0; k <= V; k++) {
-        // Se colpi andati, restituisci potenza!
-        int colpiSparati = 2 * (V - i) - k + F - j;
-        if (colpiSparati > colpi) {
-          DP[currentI][currentJ][k] = 0.0;
-        } else if (colpiSparati == colpi) {
-          double tmp = (i + k) * j;
-          DP[currentI][currentJ][k] = tmp;
-        } else {
-          double uno, due, tre;
-          if (i > 0 && k < V) {
-            uno = ((double)i) * DP[previousI][currentJ][k + 1];
-          } else {
-            uno = 0;
-          }
-          if (j > 0) {
-            due = ((double)j) * DP[currentI][previousJ][k];
-          } else {
-            due = 0;
-          }
-          if (k > 0) {
-            tre = ((double)k) * DP[currentI][currentJ][k - 1];
-          } else {
-            tre = 0;
-          }
-
-          double res = ((double)uno + due + tre) / ((double)i + j + k);
-          DP[currentI][currentJ][k] = res;
-        }
-      }
+double takeDownProb(int v, int f, int V, int F, int colpi) {
+  if (colpi < 0) {
+    return 0;
+  } else if (colpi == 0) {
+    return 1;
+  } else {
+    double tookDownV = 0;
+    if (v > 0) {
+      tookDownV = ((double)V / ((double)(V + F) * (V + F))) *
+                  takeDownProb(v - 1, f, V - 1, F, colpi - 2);
     }
+
+    double tookDownF = 0;
+    if (f > 0) {
+      tookDownF = ((double)F / ((double)V + F)) *
+                  takeDownProb(v, f - 1, V, F - 1, colpi - 1);
+    }
+
+    double dropOnMV = 0;
+    int MV = colpi - 2 * v - f;
+    if (MV > 0) {
+      // if (v <= 0 && f <= 0 && colpi > 0) {
+      dropOnMV = ((double)MV / ((double)(V + F))) *
+                 takeDownProb(v, f, V, F, colpi - 1);
+    }
+
+    return tookDownV + tookDownF + dropOnMV;
   }
-
-  // for (int i = 0; i < dim; i++) {
-  //   for (int j = 0; j < dim; j++) {
-  //     for (int k = 0; k <= V; k++) {
-  //       cout << "DP[" << i << "][" << j << "][" << k << "] = " << DP[i][j][k]
-  //            << endl;
-  //     }
-  //   }
-  // }
-
-  return DP[currentI][currentJ][0];
 }
 
 int main() {
@@ -90,13 +45,15 @@ int main() {
   cin >> id;
   ifstream in("dataset/input/input" + id + ".txt");
 
-  int v, f, c;
-  in >> v >> f >> c;
+  int V, F, C;
+  in >> V >> F >> C;
 
-  double res = c >= (2 * v + f) ? 0 : iterPotenza(v, f, 0, c);
+  int i, j;
+  cin >> i >> j;
 
-  ofstream out("output.txt");
-  out << scientific << setprecision(10) << res << endl;
+  double res = takeDownProb(i, j, V, F, C);
+
+  cout << scientific << setprecision(10) << res << endl;
 
   return 0;
 }
