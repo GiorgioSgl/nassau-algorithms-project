@@ -40,10 +40,10 @@ double takeDownProb(int v, int f, int V, int F, int colpi) {
 
 int main() {
 
-  // ifstream in("input.txt");
-  string id;
-  cin >> id;
-  ifstream in("dataset/input/input" + id + ".txt");
+  ifstream in("input.txt");
+  // string id;
+  // cin >> id;
+  // ifstream in("dataset/input/input" + id + ".txt");
 
   int V, F, C;
   in >> V >> F >> C;
