@@ -1,5 +1,5 @@
-vscode/launch.json
-vscode/tasks.json
+./vscode/launch.json
+./vscode/tasks.json
 nassau
 input.txt
 output.txt
